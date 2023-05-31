@@ -5,40 +5,13 @@ from sklearn.model_selection import train_test_split
 import pycrfsuite as crfs
 
 #CRF Features
-from CRF_Features.Features_POS import get_word_to_crf_features_POS
-
+from CRF_Features.Features_POS import *
+from CRF_Features.Features_witouht_POS import *
 from Utils.extract_words import *
 from Utils.labels import *
 
-
-def get_sent_to_crf_features(sent):
-    return [get_word_to_crf_features_POS(sent, i) for i in range(len(sent))]
-
-def sent2labels(sent):
-    return [label for _, _, label in sent]
-
-def sent2tokens(sent):
-    return [token for token, _, _ in sent]
-
-
-
-def CRF_creation(X_train, y_train):
-    trainer_crf = crfs.Trainer(verbose=False) # Instance a CRF trainer
-
-    for xseq, yseq in zip(X_train, y_train):
-        trainer_crf.append(xseq, yseq) # Stack the data
-
-def Train_Test_Sets(Data):
-    train_sents, test_sents = train_test_split(Data, test_size=0.2, random_state=42)
-
-    X_train = [get_sent_to_crf_features(s) for s in train_sents]
-    y_train = [sent2labels(s) for s in train_sents]
-
-    X_test = [get_sent_to_crf_features(s) for s in test_sents]
-    y_test = [sent2labels(s) for s in test_sents]
-
-def Taggin_Files(Data_json, with_POS = True):
-    if with_POS:
+def Taggin_Files(Data_json, POS = True):
+    if POS:
         tagged_files = [[(word, POS, label) for word, POS, label in label_text(Data_json, i)] 
                         for i in range(len(Data_json))]
     else:
@@ -47,12 +20,58 @@ def Taggin_Files(Data_json, with_POS = True):
 
     return tagged_files
 
+
+def CRF_creation(X_train, y_train):
+    trainer_crf = crfs.Trainer(verbose=False) # Instance a CRF trainer
+
+    for xseq, yseq in zip(X_train, y_train):
+        trainer_crf.append(xseq, yseq) # Stack the data
+    
+    trainer_crf.set_params({
+    'c1': 1.0,   # coefficient for L1 penalty
+    'c2': 1e-3,  # coefficient for L2 penalty
+    'max_iterations': 100,
+
+    # include transitions that are possible, but not observed
+    'feature.possible_transitions': True
+    })
+
+    return trainer_crf
+
+def Train_Test_Sets(Data, POS = True):
+    train_sents, test_sents = train_test_split(Data, test_size=0.2, random_state=42)
+
+    if POS:
+
+        X_train = [get_sent_to_crf_features_POS(s) for s in train_sents]
+        y_train = [sent2labels_POS(s) for s in train_sents]
+
+        X_test = [get_sent_to_crf_features_POS(s) for s in test_sents]
+        y_test = [sent2labels_POS(s) for s in test_sents]
+    else:
+
+        X_train = [get_sent_to_crf_features(s) for s in train_sents]
+        y_train = [sent2labels(s) for s in train_sents]
+
+        X_test = [get_sent_to_crf_features(s) for s in test_sents]
+        y_test = [sent2labels(s) for s in test_sents]
+    
+    return X_train, y_train, X_test, y_test
+
+
+
 path_json = r'C:\Users\34644\Desktop\Second Semester\Natural Language\Project_NLP\Data.json'
 
-
-
 if __name__ == "__main__":
+    POS = False
     Data_json = pd.read_json(path_json)
-    Files_tagged = Taggin_Files(Data_json, with_POS=False)
-    train_data, test_data = train_test_split(Files_tagged, test_size=0.2, random_state=42)
+    Files_tagged = Taggin_Files(Data_json, POS=POS)
+
+    X_train, y_train, X_test, y_test = Train_Test_Sets(Files_tagged, POS)
+
+    trainer_crf = CRF_creation(X_train, y_train)
+
+    trainer_crf.train('nlp_NEG_UNC_crf-improved.crfsuite') # Train the model and save it locally.
+    tagger_crf = crfs.Tagger()
+    tagger_crf.open('/content/nlp_NEG_UNC_crf-improved.crfsuite') # Load the inference API
 

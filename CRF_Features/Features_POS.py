@@ -51,3 +51,13 @@ def get_word_to_crf_features_POS(sentence, word_idx):
     return features
 
 
+def get_sent_to_crf_features_POS(sent):
+    return [get_word_to_crf_features_POS(sent, i) for i in range(len(sent))]
+
+def sent2labels_POS(sent):
+    return [label for _, _, label in sent]
+
+def sent2tokens_POS(sent):
+    return [token for token, _, _ in sent]
+
+

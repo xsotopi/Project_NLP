@@ -46,3 +46,12 @@ def get_word_to_crf_features(sentence, word_idx):
         features.append('eos')
 
     return features
+
+def get_sent_to_crf_features(sent):
+    return [get_word_to_crf_features(sent, i) for i in range(len(sent))]
+
+def sent2labels(sent):
+    return [label for _, label in sent]
+
+def sent2tokens(sent):
+    return [token for token, _, in sent]
