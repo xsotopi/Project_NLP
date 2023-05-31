@@ -64,7 +64,7 @@ def Train_Test_Sets(Data, POS = True):
 path_json = '/Users/nbiescas/Desktop/Project_NLP/Data.json'
 
 if __name__ == "__main__":
-    POS = False
+    POS = True
     Data_json    = pd.read_json(path_json)          
     Files_tagged = Taggin_Files(Data_json, POS=POS)
 
