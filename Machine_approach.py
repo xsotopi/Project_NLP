@@ -9,10 +9,11 @@ from CRF_Features.Features_POS import *
 from CRF_Features.Features_witouht_POS import *
 from Utils.extract_words import *
 from Utils.labels import *
+from Utils.evaluation import *
 
 def Taggin_Files(Data_json, POS = True):
     if POS:
-        tagged_files = [[(word, POS, label) for word, POS, label in label_text(Data_json, i)] 
+        tagged_files = [[(word, POS, label) for word, POS, label in label_text_POS(Data_json, i, string.punctuation)] 
                         for i in range(len(Data_json))]
     else:
         tagged_files = [[(word, label) for word, label in label_text(Data_json, i, string.punctuation)] 
@@ -60,11 +61,11 @@ def Train_Test_Sets(Data, POS = True):
 
 
 
-path_json = r'C:\Users\34644\Desktop\Second Semester\Natural Language\Project_NLP\Data.json'
+path_json = '/Users/nbiescas/Desktop/Project_NLP/Data.json'
 
 if __name__ == "__main__":
     POS = False
-    Data_json = pd.read_json(path_json)
+    Data_json    = pd.read_json(path_json)          
     Files_tagged = Taggin_Files(Data_json, POS=POS)
 
     X_train, y_train, X_test, y_test = Train_Test_Sets(Files_tagged, POS)
@@ -73,5 +74,8 @@ if __name__ == "__main__":
 
     trainer_crf.train('nlp_NEG_UNC_crf-improved.crfsuite') # Train the model and save it locally.
     tagger_crf = crfs.Tagger()
-    tagger_crf.open('/content/nlp_NEG_UNC_crf-improved.crfsuite') # Load the inference API
+    tagger_crf.open('/Users/nbiescas/Desktop/Project_NLP/nlp_NEG_UNC_crf-improved.crfsuite') # Load the inference API
 
+    y_pred_crf = [tagger_crf.tag(xseq) for xseq in X_test]
+    CRF = bio_classification_report(y_test, y_pred_crf)         
+    print('CRF', CRF)
