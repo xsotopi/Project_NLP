@@ -5,7 +5,6 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 def bio_classification_report(y_true, y_pred):
     """
-
     Classification report.
     You can use this as evaluation for both in the baseline model and new model.
     """
