@@ -1,5 +1,9 @@
 # DETECTION OF NEGATIONS AND UNCERTAINTIES IN DISCHARGED MEDICAL TEXTS
 This project aims to explore and effectively detect the expressions of negations and uncertainties within medical discharge summaries. In the medical field, understanding such nuances is essential to accurate diagnosis, prognosis, and ultimately patient care. This project aims to provide an effective, automated solution that can facilitate and expedite this process, reducing the scope for human error and increasing the speed of healthcare service provision.
+<p align="center">
+  <img width="500" alt="image" src="https://github.com/NilBiescas/Project_NLP/assets/98542048/628ac09c-27c8-48a8-9acd-e48f0b79c061">
+</p>
+
 
 ## Overview:
 This project explores two distinct approaches for the detection of these linguistic phenomena: a rule-based method and a machine learning method. The rule-based method relies on pre-established sets of patterns and rules, while the machine learning method takes advantage of the CRFSuite, a Conditional Random Field (CRF) algorithm known for its applicability in the field of Natural Language Processing.
