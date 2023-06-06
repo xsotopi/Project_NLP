@@ -1,15 +1,14 @@
 import string
 import pandas as pd
-import re
 from sklearn.model_selection import train_test_split
 import pycrfsuite as crfs
 
-#CRF Features
-from CRF_Features.Features_POS import *
-from CRF_Features.Features_witouht_POS import *
-from Utils.extract_words import *
-from Utils.labels import *
-from Utils.evaluation import *
+
+from Models.CRF_with_POS import *
+from Models.CRF_without_POS import *
+
+from Utils.extract_words import label_text_POS, label_text
+from Utils.evaluation import bio_classification_report
 
 def Taggin_Files(Data_json, POS = True):
     if POS:

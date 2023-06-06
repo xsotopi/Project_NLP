@@ -1,4 +1,4 @@
-from labels import start_end_label
+from Utils.labels import start_end_label
 import nltk
 
 def get_nextWord(text, End_word):
@@ -8,20 +8,20 @@ def get_nextWord(text, End_word):
     End_Word: Characters that specifiy what is consider the end of a word. Ex (!.,)
     """""
     i = 0
-    word = ""   #Variable to store a word
+    word = ""              
     start = True
     while i < len(text):    #Iterate the text character by character
         if (i < len(text)) and (text[i] != ' ') and (text[i] not in End_word):  #If the character is either a space or and end of a word 
-            if start:       #If start is set to true it means is the firts character of the word
-                pos = i     #Store the position of the firts character of the word
+            if start:       
+                pos = i         #Store the position of the firts character of the word
                 start = False
-            word += text[i] #Store the characters contained in the word
-        elif word != '':    #If the variable word is not empty
+            word += text[i]     #Store the characters contained in the word
+        elif word != '':        #If the variable word is not empty
             yield (pos, word)   #Return the start position and the word
             word = ''           
-            start = True        #Reset the word and start.
-        i += 1     #Advanced to the next character
-    yield (pos, word)   #These line is executed for the last word in the text
+            start = True       
+        i += 1     
+    yield (pos, word)           #These line is executed for the last word in the text
 
 
 def label_text(df, number_row, End_word):
@@ -36,7 +36,7 @@ def label_text(df, number_row, End_word):
     if len(labels) == 0:    #If there are not annotations return
         return []
     pos = 0
-    contador = 0
+    words_count = 0
 
     text_annotations = []
     
@@ -44,15 +44,15 @@ def label_text(df, number_row, End_word):
     for index, word in all_words:   #Iterate for all the words
         if pos < len(labels):   
             start, end, text, num_words, label = labels[pos]    #Obtantion of tag information
-        if ((index >= start) and (index <= end)): #If te word we are currently looking is between the start or end of a given tag enter.
-            contador += 1                         #contador keeps track of the number of words seen between the range start and end
-            text_annotations.append((word, label))  #Append the given word with their correct tag
+        if ((index >= start) and (index <= end)): 
+            words_count += 1                           #contador keeps track of the number of words seen between the range start and end
+            text_annotations.append((word, label)) 
         else:
             text_annotations.append((word, 'other'))   
-        if contador == num_words:   #If the number of words seen equals the number of words contained in that tag, advanced to the next one
+        if words_count == num_words:    
             pos += 1
-            contador = 0
-    return text_annotations #Returned the list of tuples. (Word, tag)
+            words_count = 0
+    return text_annotations
 
 
 def label_text_POS(df, number_row, End_word):

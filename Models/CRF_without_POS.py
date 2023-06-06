@@ -1,3 +1,5 @@
+# File containing the features without considering the Pos taggin information
+
 import re
 
 def get_word_to_crf_features(sentence, word_idx):

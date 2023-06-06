@@ -13,6 +13,9 @@ def start_end_label(Dataframe, number_row):
              entry["value"]["labels"][0]) for entry in data]
 
 def get_label_in_text(Dataframe, number_row, Show=False):
+    """
+    Returns a dataframe, containing information of the tags of a given text.
+    """
     Predictions = start_end_label(Dataframe, number_row)
     text = Dataframe["data"][number_row]["text"]
 
