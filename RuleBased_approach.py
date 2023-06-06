@@ -44,7 +44,7 @@ def sent2labels(sent):
 if __name__ == "__main__":
 
     df = pd.read_json("Data.json")
-
+    
     negations_cues, uncertainty_cues = NEG_UNC_texts()
     End_sentence, End_word = end_word_obtantion()
 

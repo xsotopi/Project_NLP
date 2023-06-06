@@ -77,4 +77,5 @@ if __name__ == "__main__":
 
     y_pred_crf = [tagger_crf.tag(xseq) for xseq in X_test]
     CRF = bio_classification_report(y_test, y_pred_crf)         
-    print('CRF', CRF)
+    print('CRF')
+    print(CRF)
